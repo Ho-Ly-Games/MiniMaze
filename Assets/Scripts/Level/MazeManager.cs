@@ -1,0 +1,228 @@
+﻿using System;
+using System.Collections.Generic;
+using Game;
+using MazeGen;
+using Sirenix.OdinInspector;
+using UnityEngine;
+using UnityEngine.Tilemaps;
+using Random = UnityEngine.Random;
+
+namespace Level
+{
+    public class MazeManager : MonoBehaviour
+    {
+        [System.Serializable]
+        public struct GoalProp
+        {
+            public bool GoalFound;
+            public Vector2Int Position;
+            public float Time;
+        }
+
+        [SerializeField] private CameraController cameraController;
+        [SerializeField] private Timer timer;
+
+        [SerializeField] private Ball Ball;
+        private Ball _localBall;
+        [SerializeField] private Goal Goal;
+        private Goal _localGoal;
+
+        [SerializeField] private int width, height;
+        [SerializeField] private string seed;
+        [SerializeField] private GenerateLevel generateLevel;
+
+        [SerializeField] private List<Tile> tiles;
+
+        [SerializeField] private Tilemap tilemap;
+
+        [SerializeField] private GoalProp goal;
+        [SerializeField] private GoalProp start;
+
+        public void CreateMaze(List<List<Node>> nodes)
+        {
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                for (int j = 0; j < nodes[i].Count; j++)
+                {
+                    tilemap.SetTile(new Vector3Int(i, (nodes[i].Count - 1) - j, 0), tiles[nodes[i][j].Wall - 1]);
+                }
+            }
+        }
+
+        private void Start()
+        {
+            MakeMaze();
+        }
+
+        [Button("Generate")]
+        public void MakeMaze()
+        {
+            generateLevel.GenerateMaze(width, height, seed.GetHashCode());
+        }
+
+        public GoalProp FindGoal(List<List<Node>> nodes)
+        {
+            _visited = new bool[nodes.Count, nodes[0].Count];
+
+            return FindGoalRec(nodes, Vector2Int.zero, new GoalProp()
+            {
+                GoalFound = false,
+                Position = Vector2Int.zero,
+                Time = 0
+            });
+        }
+
+        public GoalProp FindStart(List<List<Node>> nodes, Vector2Int goalPos)
+        {
+            _visited = new bool[nodes.Count, nodes[0].Count];
+
+            return FindGoalRec(nodes, goalPos, new GoalProp()
+            {
+                GoalFound = false,
+                Position = Vector2Int.zero,
+                Time = 0
+            });
+        }
+
+        private bool[,] _visited;
+
+        private GoalProp FindGoalRec(List<List<Node>> nodes, Vector2Int pos, GoalProp goal)
+        {
+            //distance calculations
+            //dead-end 1 sec
+            //straight 5 sec
+            //corner 7 sec
+            //three-way 8 sec
+            //four-way 10 sec
+
+
+            //mark current as visited
+            _visited[pos.x, pos.y] = true;
+
+            //add the time of the current node to the goal time
+            switch (nodes[pos.x][pos.y].Wall)
+            {
+                case 1:
+                case 2:
+                case 4:
+                case 8:
+                    //dead end
+                    goal.Time += 1;
+                    break;
+                case 3:
+                case 6:
+                case 9:
+                case 12:
+                    //corners
+                    goal.Time += 7;
+                    break;
+                case 5:
+                case 10:
+                    //straight
+                    goal.Time += 3;
+                    break;
+                case 7:
+                case 11:
+                case 13:
+                case 14:
+                    //three-way
+                    goal.Time += 9;
+                    break;
+                case 15:
+                    //four-way
+                    goal.Time += 10;
+                    break;
+            }
+
+            GoalProp
+                up = new GoalProp {Time = 0, Position = Vector2Int.one * -1, GoalFound = false},
+                left = new GoalProp {Time = 0, Position = Vector2Int.one * -1, GoalFound = false},
+                down = new GoalProp {Time = 0, Position = Vector2Int.one * -1, GoalFound = false},
+                right = new GoalProp {Time = 0, Position = Vector2Int.one * -1, GoalFound = false};
+            //find each way to go that does not go through a wall, or is already visited
+            if (nodes[pos.x][pos.y].GetWall(0) && !_visited[pos.x, pos.y - 1]) //up
+            {
+                up = FindGoalRec(nodes, new Vector2Int(pos.x, pos.y - 1), goal);
+            }
+
+            if (nodes[pos.x][pos.y].GetWall(1) && !_visited[pos.x + 1, pos.y]) //left
+            {
+                left = FindGoalRec(nodes, new Vector2Int(pos.x + 1, pos.y), goal);
+            }
+
+            if (nodes[pos.x][pos.y].GetWall(2) && !_visited[pos.x, pos.y + 1]) //down
+            {
+                down = FindGoalRec(nodes, new Vector2Int(pos.x, pos.y + 1), goal);
+            }
+
+            if (nodes[pos.x][pos.y].GetWall(3) && !_visited[pos.x - 1, pos.y]) //right
+            {
+                right = FindGoalRec(nodes, new Vector2Int(pos.x - 1, pos.y), goal);
+            }
+
+            //compare to find farthest
+            if (up.GoalFound == false && left.GoalFound == false && down.GoalFound == false && right.GoalFound == false)
+            {
+                //we are in a dead end and there are no valid paths
+                goal.GoalFound = true;
+                goal.Position = pos;
+                return goal;
+            }
+            else
+            {
+                //return farthest
+                if (up.GoalFound && up.Time >= left.Time && up.Time >= right.Time && up.Time >= down.Time) return up;
+                if (left.GoalFound && left.Time >= up.Time && left.Time >= right.Time && left.Time >= down.Time)
+                    return left;
+                if (down.GoalFound && down.Time >= left.Time && down.Time >= right.Time && down.Time >= up.Time)
+                    return down;
+                if (right.GoalFound && right.Time >= left.Time && right.Time >= up.Time && right.Time >= down.Time)
+                    return right;
+            }
+
+            Debug.Log("No goal found");
+            return goal;
+        }
+
+        public void SetReady(GoalProp start, GoalProp goal)
+        {
+            this.start = start;
+            this.goal = goal;
+
+            var startPos3D = new Vector3(start.Position.x + 0.5f, height - start.Position.y - 0.5f, 0);
+
+            if (_localBall == null)
+                _localBall = Instantiate(Ball, startPos3D,
+                    Quaternion.identity);
+            else
+                _localBall.transform.position = startPos3D;
+
+            cameraController.ball = _localBall;
+
+            var goalPos3D = new Vector3(goal.Position.x + 0.5f, height - goal.Position.y - 0.5f, 0);
+
+            if (_localGoal == null)
+                _localGoal = Instantiate(Goal, goalPos3D,
+                    Quaternion.identity);
+            else
+                _localGoal.transform.position = goalPos3D;
+
+            _localBall.goal = _localGoal;
+
+            _localGoal._mazeManager = this;
+            
+            timer.StartTimer();
+        }
+
+        public void Completed()
+        {
+            var time = timer.Stop();
+            Debug.Log($"{time} elapsed, calculated {start.Time} for seed {seed} with width {width} and height {height}");
+            seed = Mathf.Floor(Random.Range(0, 10000000)).ToString();
+            width = Random.Range(10, 40);
+            height = Random.Range(10, 40);
+            tilemap.ClearAllTiles();
+            generateLevel.GenerateMaze(width, height, seed.GetHashCode());
+        }
+    }
+}
