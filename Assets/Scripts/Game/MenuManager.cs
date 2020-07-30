@@ -6,19 +6,16 @@ namespace Game
     {
         public void StartGame()
         {
+            GameManager.gameManagerRef.LoadLevelView();
         }
 
-        public void SwitchToMenu(Canvas newMenu)
+        public void Settings()
         {
         }
 
         public void QuitGame()
         {
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#else
-            Application.Quit(0);
-#endif
+            GameManager.gameManagerRef.QuitGame();
         }
     }
 }

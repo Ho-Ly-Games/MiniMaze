@@ -18,11 +18,10 @@ public class DatabaseHandler : MonoBehaviour
 
     private void Awake()
     {
-        urlDataBase = "URI=file:" + Application.persistentDataPath + "MasterSQLite.db";
+        urlDataBase = "URI=file:" + Application.persistentDataPath + "MiniMaze.db";
     }
-
-    [Button]
-    public static void Initiate () {
+    private void OnEnable()
+    {
         IDbConnection _connection = new SqliteConnection (urlDataBase);
         dbcmd = _connection.CreateCommand ();
         _connection.Open ();
@@ -63,18 +62,9 @@ public class DatabaseHandler : MonoBehaviour
         dbcmd.CommandText = sql;
         dbcmd.ExecuteNonQuery ();
     }
-    
-    
-    private void OnEnable()
-    {
-        //connect to database
-    }
-
-    
-    
 
     private void OnDisable()
     {
-        //disconnect from database
+        dbcmd.Connection.Close();
     }
 }
