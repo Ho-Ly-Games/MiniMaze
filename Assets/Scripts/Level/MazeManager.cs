@@ -27,8 +27,6 @@ namespace Level
         [SerializeField] private Goal Goal;
         private Goal _localGoal;
 
-        [SerializeField] private int width, height;
-        [SerializeField] private string seed;
         [SerializeField] private GenerateLevel generateLevel;
 
         [SerializeField] private List<Tile> tiles;
@@ -51,13 +49,13 @@ namespace Level
 
         private void Start()
         {
-            MakeMaze();
+            MakeMaze(GameManager.currentLevel);
         }
 
         [Button("Generate")]
-        public void MakeMaze()
+        public void MakeMaze(LevelInfo level)
         {
-            generateLevel.GenerateMaze(width, height, seed.GetHashCode());
+            generateLevel.GenerateMaze(level.width, level.height, level.seed.GetHashCode());
         }
 
         public GoalProp FindGoal(List<List<Node>> nodes)
@@ -184,12 +182,10 @@ namespace Level
             return goal;
         }
 
-        public void SetReady(GoalProp start, GoalProp goal)
+        public void SetReady()
         {
-            this.start = start;
-            this.goal = goal;
-
-            var startPos3D = new Vector3(start.Position.x + 0.5f, height - start.Position.y - 0.5f, 0);
+            var startPos3D = new Vector3(GameManager.currentLevel.startX + 0.5f,
+                GameManager.currentLevel.height - GameManager.currentLevel.startY - 0.5f, 0);
 
             if (_localBall == null)
                 _localBall = Instantiate(Ball, startPos3D,
@@ -199,7 +195,8 @@ namespace Level
 
             cameraController.ball = _localBall;
 
-            var goalPos3D = new Vector3(goal.Position.x + 0.5f, height - goal.Position.y - 0.5f, 0);
+            var goalPos3D = new Vector3(GameManager.currentLevel.endX + 0.5f,
+                GameManager.currentLevel.height - GameManager.currentLevel.endY - 0.5f, 0);
 
             if (_localGoal == null)
                 _localGoal = Instantiate(Goal, goalPos3D,
@@ -209,20 +206,24 @@ namespace Level
 
             _localBall.goal = _localGoal;
 
+            var tempCameraPos = cameraController.transform.position;
+            tempCameraPos.x = startPos3D.x;
+            tempCameraPos.y = startPos3D.y;
+            cameraController.transform.position = tempCameraPos;
+
             _localGoal._mazeManager = this;
-            
+
             timer.StartTimer();
         }
 
         public void Completed()
         {
             var time = timer.Stop();
-            Debug.Log($"{time} elapsed, calculated {start.Time} for seed {seed} with width {width} and height {height}");
-            seed = Mathf.Floor(Random.Range(0, 10000000)).ToString();
-            width = Random.Range(10, 40);
-            height = Random.Range(10, 40);
-            tilemap.ClearAllTiles();
-            generateLevel.GenerateMaze(width, height, seed.GetHashCode());
+            GameManager.currentLevel.time = time;
+            Debug.Log(
+                $"{GameManager.currentLevel.time} elapsed, calculated {GameManager.currentLevel.expectedTime} for seed {GameManager.currentLevel.seed} with width {GameManager.currentLevel.width} and height {GameManager.currentLevel.height}");
+
+            GameManager.gameManagerRef.PlayNextLevel();
         }
     }
 }

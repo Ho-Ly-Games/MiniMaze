@@ -23,8 +23,12 @@ namespace Game
             twoStars,
             threeStars;
 
+        [SerializeField] private Button button;
+
         public void Init(LevelInfo levelInfo)
         {
+            button.onClick.AddListener(delegate { GameManager.gameManagerRef.PlayLevel(levelInfo); });
+
             //Copy over the stats for the level
             this.levelInfo = levelInfo;
             //show these stats on the card
@@ -39,23 +43,24 @@ namespace Game
             }
             else bestTime.text = "Incomplete";
 
-            switch (levelInfo.stars)
-            {
-                case LevelInfo.StartCount.ZeroStar:
-                    stars.sprite = zeroStars;
-                    break;
-                case LevelInfo.StartCount.OneStar:
-                    stars.sprite = oneStar;
-                    break;
-                case LevelInfo.StartCount.TwoStar:
-                    stars.sprite = twoStars;
-                    break;
-                case LevelInfo.StartCount.ThreeStar:
-                    stars.sprite = threeStars;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            if (false)
+                switch (levelInfo.stars)
+                {
+                    case LevelInfo.StartCount.ZeroStar:
+                        stars.sprite = zeroStars;
+                        break;
+                    case LevelInfo.StartCount.OneStar:
+                        stars.sprite = oneStar;
+                        break;
+                    case LevelInfo.StartCount.TwoStar:
+                        stars.sprite = twoStars;
+                        break;
+                    case LevelInfo.StartCount.ThreeStar:
+                        stars.sprite = threeStars;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
 
             size.text = $"{levelInfo.width}x{levelInfo.height}";
             seed.text = levelInfo.seed;
