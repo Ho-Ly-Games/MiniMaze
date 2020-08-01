@@ -1,4 +1,6 @@
-﻿namespace Game
+﻿using System;
+
+namespace Game
 {
     public class LevelInfo
     {
@@ -20,7 +22,7 @@
         public int endX = -1, endY = -1;
 
         public float expectedTime;
-        public float time;
+        public float time = Single.PositiveInfinity;
         public StartCount stars;
     }
 }

@@ -36,6 +36,10 @@ namespace Level
         [SerializeField] private GoalProp goal;
         [SerializeField] private GoalProp start;
 
+        [SerializeField] private GameObject pauseButton;
+        [SerializeField] private GameObject pauseMenu;
+        [SerializeField] private LevelCompleteScreen levelCompleteScreen;
+
         public void CreateMaze(List<List<Node>> nodes)
         {
             for (int i = 0; i < nodes.Count; i++)
@@ -45,6 +49,28 @@ namespace Level
                     tilemap.SetTile(new Vector3Int(i, (nodes[i].Count - 1) - j, 0), tiles[nodes[i][j].Wall - 1]);
                 }
             }
+        }
+
+        public void Pause(bool pause)
+        {
+            pauseButton.SetActive(!pause);
+            pauseMenu.SetActive(pause);
+            Time.timeScale = pause ? 0 : 1;
+        }
+
+        public void ToMainMenu()
+        {
+            GameManager.gameManagerRef.GoToMain();
+        }
+
+        public void RestartLevel()
+        {
+            GameManager.gameManagerRef.PlayLevel(GameManager.currentLevel);
+        }
+
+        public void NextLevel()
+        {
+            GameManager.gameManagerRef.PlayNextLevel();
         }
 
         private void Start()
@@ -219,11 +245,16 @@ namespace Level
         public void Completed()
         {
             var time = timer.Stop();
-            GameManager.currentLevel.time = time;
-            Debug.Log(
-                $"{GameManager.currentLevel.time} elapsed, calculated {GameManager.currentLevel.expectedTime} for seed {GameManager.currentLevel.seed} with width {GameManager.currentLevel.width} and height {GameManager.currentLevel.height}");
 
-            GameManager.gameManagerRef.PlayNextLevel();
+            if (time < GameManager.currentLevel.time)
+                GameManager.currentLevel.time = time;
+
+            //GameManager.currentLevel.time = time;
+
+            _localBall.rgd.velocity = Vector2.zero;
+            _localBall.rgd.constraints = RigidbodyConstraints2D.FreezeAll;
+
+            levelCompleteScreen.gameObject.SetActive(true);
         }
     }
 }

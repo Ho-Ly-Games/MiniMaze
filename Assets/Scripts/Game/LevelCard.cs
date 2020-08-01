@@ -36,7 +36,7 @@ namespace Game
             //level name
             levelName.text = levelInfo.levelName;
 
-            if (levelInfo.time >= 0)
+            if (levelInfo.time < Single.PositiveInfinity)
             {
                 TimeSpan time = TimeSpan.FromSeconds(levelInfo.time);
                 bestTime.text = time.ToString("mm':'ss");
