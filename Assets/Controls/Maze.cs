@@ -139,17 +139,6 @@ namespace Input
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""86771088-cfd5-4023-9eae-44d0fe0b96da"",
-                    ""path"": ""*/{Tilt}"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gyro"",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 }
             ]
         }

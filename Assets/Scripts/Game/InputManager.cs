@@ -21,20 +21,24 @@ namespace Game
             controls.Enable();
 
             controls.Ball.Enable();
-
+            InputSystem.EnableDevice(Accelerometer.current);
         }
 
 
         private void FixedUpdate()
         {
-            var direction = controls.Ball.Movement.ReadValue<Vector2>();
+            //var direction = controls.Ball.Movement.ReadValue<Vector2>();
             //todo process inversion
-            Direction?.Invoke(direction.x, direction.y);
+            //Direction?.Invoke(direction.x, direction.y);
+
+            var acceleration = Accelerometer.current.acceleration.ReadValue().normalized;
+            Direction?.Invoke(acceleration.x, acceleration.y);
         }
 
 
         private void OnDisable()
         {
+            InputSystem.DisableDevice(Accelerometer.current);
             controls.Ball.Disable();
             controls.Disable();
         }
