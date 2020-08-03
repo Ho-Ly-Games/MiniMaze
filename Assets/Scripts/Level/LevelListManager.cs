@@ -17,5 +17,10 @@ namespace Level
                 lC.Init(level);
             }
         }
+
+        public void ToMainMenu()
+        {
+            GameManager.gameManagerRef.GoToMain();
+        }
     }
 }

@@ -18,7 +18,7 @@ namespace Game
         {
             if (gameManagerRef == null) gameManagerRef = this;
             DontDestroyOnLoad(this.gameObject);
-            StoryLevels = GameLevels();
+            StoryLevels = Levels();
         }
 
         private void Start()
@@ -64,131 +64,28 @@ namespace Game
 #endif
         }
 
-        public static List<LevelInfo> GameLevels()
+        private List<LevelInfo> Levels()
         {
-            List<LevelInfo> levels = new List<LevelInfo>()
+            List<LevelInfo> Levels = new List<LevelInfo>();
+            var levels = Resources.Load<TextAsset>("Levels/Story");
+
+            var lines = levels.text.Split('\n');
+
+            foreach (var line in lines)
             {
-                new LevelInfo()
+                if (line == String.Empty) break;
+                var data = line.Split(',');
+                Levels.Add(new LevelInfo()
                 {
-                    levelName = "Level 1",
-                    id = 1,
-                    width = 2,
-                    height = 2,
-                    seed = "716065106"
-                },
-                new LevelInfo()
-                {
-                    levelName = "Level 2", id = 2,
-                    width = 3,
-                    height = 3,
-                    seed = "997368232"
-                },
-                new LevelInfo()
-                {
-                    levelName = "Level 3",
-                    id = 3,
-                    width = 4,
-                    height = 4,
-                    seed = "1139115468"
-                },
-                new LevelInfo()
-                {
-                    levelName = "Level 4",
-                    id = 4,
-                    width = 5,
-                    height = 5,
-                    seed = "2040860138"
-                },
-                new LevelInfo()
-                {
-                    levelName = "Level 5",
-                    id = 5,
-                    width = 6,
-                    height = 6,
-                    seed = "1998986992"
-                },
-                new LevelInfo()
-                {
-                    levelName = "Level 6",
-                    id = 6,
-                    width = 7,
-                    height = 7,
-                    seed = "453579586"
-                },
-                new LevelInfo()
-                {
-                    levelName = "Level 7",
-                    id = 7,
-                    width = 8,
-                    height = 8,
-                    seed = "1826015642"
-                },
-                new LevelInfo()
-                {
-                    levelName = "Level 8",
-                    id = 8,
-                    width = 9,
-                    height = 9,
-                    seed = "1678668641"
-                },
-                new LevelInfo()
-                {
-                    levelName = "Level 9",
-                    id = 9,
-                    width = 10,
-                    height = 10,
-                    seed = "446943417"
-                },
-                new LevelInfo()
-                {
-                    levelName = "Level 10",
-                    id = 10,
-                    width = 10,
-                    height = 10,
-                    seed = "599432958"
-                },
-                new LevelInfo()
-                {
-                    levelName = "Level 11",
-                    id = 11,
-                    width = 10,
-                    height = 10,
-                    seed = "199168"
-                },
-                new LevelInfo()
-                {
-                    levelName = "Level 12",
-                    id = 12,
-                    width = 10,
-                    height = 10,
-                    seed = "1892745453"
-                },
-                new LevelInfo()
-                {
-                    levelName = "Level 13",
-                    id = 13,
-                    width = 12,
-                    height = 12,
-                    seed = "964050918"
-                },
-                new LevelInfo()
-                {
-                    levelName = "Level 14",
-                    id = 14,
-                    width = 12,
-                    height = 12,
-                    seed = "288009126"
-                },
-                new LevelInfo()
-                {
-                    levelName = "Level 15",
-                    id = 15,
-                    width = 15,
-                    height = 15,
-                    seed = "1810818217"
-                },
-            };
-            return levels;
+                    id = Int32.Parse(data[0]),
+                    levelName = data[1],
+                    width = Int32.Parse(data[2]),
+                    height = Int32.Parse(data[3]),
+                    seed = data[4].Trim('\r'),
+                });
+            }
+
+            return Levels;
         }
     }
 }

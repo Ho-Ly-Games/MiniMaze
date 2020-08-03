@@ -27,12 +27,14 @@ namespace Game
 
         private void FixedUpdate()
         {
-            //var direction = controls.Ball.Movement.ReadValue<Vector2>();
-            //todo process inversion
-            //Direction?.Invoke(direction.x, direction.y);
-
+#if UNITY_ANDROID
             var acceleration = Accelerometer.current.acceleration.ReadValue().normalized;
             Direction?.Invoke(acceleration.x, acceleration.y);
+#else
+            var direction = controls.Ball.Movement.ReadValue<Vector2>();
+            //todo process inversion
+            Direction?.Invoke(direction.x, direction.y);
+#endif
         }
 
 
