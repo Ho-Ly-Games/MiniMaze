@@ -131,30 +131,30 @@ namespace Level
                 case 4:
                 case 8:
                     //dead end
-                    goal.Time += 1;
+                    goal.Time += 0.7f;
                     break;
                 case 3:
                 case 6:
                 case 9:
                 case 12:
                     //corners
-                    goal.Time += 7;
+                    goal.Time += 0.2f;
                     break;
                 case 5:
                 case 10:
                     //straight
-                    goal.Time += 3;
+                    goal.Time += 0.1f;
                     break;
                 case 7:
                 case 11:
                 case 13:
                 case 14:
                     //three-way
-                    goal.Time += 9;
+                    goal.Time += 0.3f;
                     break;
                 case 15:
                     //four-way
-                    goal.Time += 10;
+                    goal.Time += 0.6f;
                     break;
             }
 
@@ -247,9 +247,14 @@ namespace Level
             var time = timer.Stop();
 
             if (time < GameManager.currentLevel.time)
+            {
                 GameManager.currentLevel.time = time;
-
+                GameManager.currentLevel.stars =
+                    (LevelInfo.StarsCount) LevelInfo.StarsAchieved(time, GameManager.currentLevel.expectedTime);
+            }
             //GameManager.currentLevel.time = time;
+
+            Debug.Log($"completed in {time} with expected time of {GameManager.currentLevel.expectedTime}");
 
             _localBall.rgd.velocity = Vector2.zero;
             _localBall.rgd.constraints = RigidbodyConstraints2D.FreezeAll;

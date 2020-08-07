@@ -19,7 +19,7 @@ namespace Game
             set
             {
                 time = value;
-                timer.text = TimeSpan.FromSeconds(value).ToString("mm':'ss");
+                timer.text = TimeSpan.FromSeconds(value).ToString("mm':'ss'.'f");
             }
         }
 

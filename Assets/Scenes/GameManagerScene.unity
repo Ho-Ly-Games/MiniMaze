@@ -166,3 +166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9d5fc5eeec84f82af9ec7ec7fbc4edb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stars0: {fileID: 6326231466481203021, guid: 7c70e4190e5b80442be47261827b8aa1, type: 3}
+  stars1: {fileID: -1689290244019267309, guid: 7c70e4190e5b80442be47261827b8aa1, type: 3}
+  stars2: {fileID: -3977775658832838512, guid: 7c70e4190e5b80442be47261827b8aa1, type: 3}
+  stars3: {fileID: -332811779789613422, guid: 7c70e4190e5b80442be47261827b8aa1, type: 3}

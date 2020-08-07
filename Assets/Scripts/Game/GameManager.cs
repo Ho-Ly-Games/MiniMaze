@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace Game
 {
@@ -14,8 +15,20 @@ namespace Game
         public static List<LevelInfo> StoryLevels;
         public static List<LevelInfo> CustomLevels;
 
+        [SerializeField] public Sprite stars0, stars1, stars2, stars3;
+
+        public static Settings Settings;
+        
         private void Awake()
         {
+            //todo get settings from db
+            
+            //todo get levels from db,
+            
+            //todo if the levels in db dont exist, get from csv
+            
+            //todo add to db
+
             if (gameManagerRef == null) gameManagerRef = this;
             DontDestroyOnLoad(this.gameObject);
             StoryLevels = Levels();

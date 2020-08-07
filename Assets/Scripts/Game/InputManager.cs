@@ -21,7 +21,9 @@ namespace Game
             controls.Enable();
 
             controls.Ball.Enable();
+#if UNITY_ANDROID
             InputSystem.EnableDevice(Accelerometer.current);
+#endif
         }
 
 
@@ -40,7 +42,9 @@ namespace Game
 
         private void OnDisable()
         {
+#if UNITY_ANDROID
             InputSystem.DisableDevice(Accelerometer.current);
+#endif
             controls.Ball.Disable();
             controls.Disable();
         }

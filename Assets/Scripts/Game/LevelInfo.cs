@@ -4,12 +4,12 @@ namespace Game
 {
     public class LevelInfo
     {
-        public enum StartCount
+        public enum StarsCount
         {
-            ZeroStar,
-            OneStar,
-            TwoStar,
-            ThreeStar,
+            ZeroStar = 0,
+            OneStar = 1,
+            TwoStar = 2,
+            ThreeStar = 3,
         }
 
         public int id;
@@ -23,6 +23,14 @@ namespace Game
 
         public float expectedTime;
         public float time = Single.PositiveInfinity;
-        public StartCount stars;
+        public StarsCount stars;
+
+        public static int StarsAchieved(float achievedTime, float expectedTime)
+        {
+            if (achievedTime <= expectedTime) return 3;
+            if (achievedTime <= expectedTime * 1.6f) return 2;
+            if (achievedTime <= expectedTime * 2.5f) return 1;
+            return 0;
+        }
     }
 }

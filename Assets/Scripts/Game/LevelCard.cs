@@ -17,12 +17,6 @@ namespace Game
 
         [SerializeField] private Image stars;
 
-        [SerializeField] private Sprite
-            zeroStars,
-            oneStar,
-            twoStars,
-            threeStars;
-
         [SerializeField] private Button button;
 
         public void Init(LevelInfo levelInfo)
@@ -39,28 +33,27 @@ namespace Game
             if (levelInfo.time < Single.PositiveInfinity)
             {
                 TimeSpan time = TimeSpan.FromSeconds(levelInfo.time);
-                bestTime.text = time.ToString("mm':'ss");
+                bestTime.text = time.ToString("mm':'ss'.'f");
             }
             else bestTime.text = "Incomplete";
 
-            if (false)
-                switch (levelInfo.stars)
-                {
-                    case LevelInfo.StartCount.ZeroStar:
-                        stars.sprite = zeroStars;
-                        break;
-                    case LevelInfo.StartCount.OneStar:
-                        stars.sprite = oneStar;
-                        break;
-                    case LevelInfo.StartCount.TwoStar:
-                        stars.sprite = twoStars;
-                        break;
-                    case LevelInfo.StartCount.ThreeStar:
-                        stars.sprite = threeStars;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+            switch (levelInfo.stars)
+            {
+                case LevelInfo.StarsCount.ZeroStar:
+                    stars.sprite = GameManager.gameManagerRef.stars0;
+                    break;
+                case LevelInfo.StarsCount.OneStar:
+                    stars.sprite = GameManager.gameManagerRef.stars1;
+                    break;
+                case LevelInfo.StarsCount.TwoStar:
+                    stars.sprite = GameManager.gameManagerRef.stars2;
+                    break;
+                case LevelInfo.StarsCount.ThreeStar:
+                    stars.sprite = GameManager.gameManagerRef.stars3;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
             size.text = $"{levelInfo.width}x{levelInfo.height}";
             seed.text = levelInfo.seed;
