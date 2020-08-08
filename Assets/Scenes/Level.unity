@@ -2216,7 +2216,7 @@ MonoBehaviour:
   anim: {fileID: 765482757}
   time: {fileID: 981142923}
   timer: {fileID: 1262935067}
-  mazeManager: {fileID: 0}
+  mazeManager: {fileID: 1262935065}
 --- !u!1 &1431427600
 GameObject:
   m_ObjectHideFlags: 0

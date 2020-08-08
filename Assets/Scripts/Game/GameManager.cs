@@ -45,6 +45,10 @@ namespace Game
             SceneManager.LoadScene("MainMenu");
         }
 
+        public void GoToSettings()
+        {
+            SceneManager.LoadScene("Settings");
+        }
         public void PlayLevel(LevelInfo level)
         {
             currentLevel = level;

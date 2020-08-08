@@ -11,6 +11,7 @@ namespace Game
 
         public void Settings()
         {
+            GameManager.gameManagerRef.GoToSettings();
         }
 
         public void QuitGame()

@@ -6,11 +6,14 @@ namespace Game
     {
         public enum ControlType
         {
-            Accelerometer, Keyboard, Gamepad, OnScreenJoystick
+            Accelerometer,
+            Keyboard,
+            Gamepad,
+            OnScreenJoystick
         }
-        
+
         public ControlType controlType;
 
-        public int qualitySetting;
+        public int qualitySetting = -1;
     }
 }

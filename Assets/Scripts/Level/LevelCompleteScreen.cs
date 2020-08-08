@@ -18,6 +18,7 @@ namespace Level
         [SerializeField] private MazeManager mazeManager;
         private void OnEnable()
         {
+            mazeManager.DisablePause();
             time.text = TimeSpan.FromSeconds(timer.Time).ToString("mm':'ss'.'f");
             anim.SetInteger("stars", LevelInfo.StarsAchieved(timer.Time, GameManager.currentLevel.expectedTime));
         }

@@ -261,5 +261,10 @@ namespace Level
 
             levelCompleteScreen.gameObject.SetActive(true);
         }
+
+        public void DisablePause()
+        {
+            pauseButton.SetActive(false);
+        }
     }
 }
