@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Security;
 using Game;
 using Mono.Data.Sqlite;
 using Sirenix.OdinInspector;
@@ -36,28 +37,59 @@ public class DatabaseHandler : MonoBehaviour
         dbcmd.ExecuteNonQuery();
     }
 
-    public bool SettingsExist()
-    {
-        
-    }
-
     public void CreateSettings(Settings settings)
     {
+        var query = "CREATE TABLE IF NOT EXISTS settings (_id INT PRIMARY KEY, control_type INT,quality INT);";
+        dbcmd.CommandText = query;
+        dbcmd.ExecuteNonQuery();
+
+        query = string.Format(
+            "INSERT INTO settings (_id, control_type, quality) VALUES (0, {0}, {1}) ON DUPLICATE KEY UPDATE control_type=VALUES(control_type) quality=VALUES(quality);",
+            (int) settings.controlType, settings.qualitySetting);
+
+        dbcmd.CommandText = query;
+        dbcmd.ExecuteNonQuery();
     }
 
     public Settings GetSettings()
     {
         var settings = new Settings();
-        var query = "SELECT * FROM settings;";
-        
+        var query = "SELECT control_type, quality FROM settings WHERE _id IS 0;";
+        dbcmd.CommandText = query;
+        var reader = dbcmd.ExecuteReader();
+
+        while (reader.Read())
+        {
+            settings.controlType = (Settings.ControlType) reader.GetInt32(0);
+            settings.qualitySetting = reader.GetInt32(1);
+        }
+
+        return settings;
     }
 
     public void UpdateSettings(Settings settings)
     {
+        var query = string.Format(
+            "INSERT INTO settings (_id, control_type, quality) VALUES (0, {0}, {1}) ON DUPLICATE KEY UPDATE control_type=VALUES(control_type) quality=VALUES(quality);",
+            (int) settings.controlType, settings.qualitySetting);
+
+        dbcmd.CommandText = query;
+        dbcmd.ExecuteNonQuery();
     }
 
     public bool StoryLevelsExist()
     {
+        var query = "SELECT COUNT(_id) FROM story_levels";
+        dbcmd.CommandText = query;
+        var reader = dbcmd.ExecuteReader();
+
+        int num = 0;
+        while (reader.Read())
+        {
+            num = reader.GetInt32(0);
+        }
+
+        return num > 0;
     }
 
     public void CreateStoryLevels(List<LevelInfo> levels)
