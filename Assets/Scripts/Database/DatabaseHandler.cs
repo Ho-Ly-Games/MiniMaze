@@ -94,6 +94,14 @@ public class DatabaseHandler : MonoBehaviour
 
     public void CreateStoryLevels(List<LevelInfo> levels)
     {
+        var query = "CREATE TABLE IF NOT EXISTS story_levels (_id INT PRIMARY KEY, level_name CHAR[50], seed CHAR[10], width INT, height INT, best_time FLOAT, stars INT);";
+        dbcmd.CommandText = query;
+        dbcmd.ExecuteNonQuery();
+
+        foreach (var level in levels)
+        {
+            query = String.Format("INSERT INTO story_levels (_id, level_name, seed, width, height, best_time, stars) ");
+        }
     }
 
     public void UpdateStoryLevel(LevelInfo level)
