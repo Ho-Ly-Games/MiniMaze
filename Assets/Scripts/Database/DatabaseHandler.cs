@@ -94,22 +94,54 @@ public class DatabaseHandler : MonoBehaviour
 
     public void CreateStoryLevels(List<LevelInfo> levels)
     {
-        var query = "CREATE TABLE IF NOT EXISTS story_levels (_id INT PRIMARY KEY, level_name CHAR[50], seed CHAR[10], width INT, height INT, best_time FLOAT, stars INT);";
+        var query =
+            "CREATE TABLE IF NOT EXISTS story_levels (_id INT PRIMARY KEY, level_name CHAR[50], seed CHAR[10], width INT, height INT, best_time FLOAT, stars INT);";
         dbcmd.CommandText = query;
         dbcmd.ExecuteNonQuery();
 
         foreach (var level in levels)
         {
-            query = String.Format("INSERT INTO story_levels (_id, level_name, seed, width, height, best_time, stars) ");
+            query =
+                string.Format(
+                    "INSERT INTO story_levels (_id, level_name, seed, width, height, best_time, stars) VALUES ({0}, {1}, {2}, {3}, {4}, {5}, {6})",
+                    level.id, level.levelName, level.seed, level.width, level.height, level.time, (int) level.stars);
+            dbcmd.CommandText = query;
+            dbcmd.ExecuteNonQuery();
         }
     }
 
     public void UpdateStoryLevel(LevelInfo level)
     {
+        var query =
+            string.Format(
+                "UPDATE story_levels SET level_name = {1}, seed = {2}, width = {3}, height = {4}, best_time = {5}, stars = {6} WHERE _id = {0};",
+                level.id, level.levelName, level.seed, level.width, level.height, level.time, (int) level.stars);
+        dbcmd.CommandText = query;
+        dbcmd.ExecuteNonQuery();
     }
 
     public List<LevelInfo> GetStoryLevels()
     {
+        var levels = new List<LevelInfo>();
+        var query = "SELECT _id, level_name, seed, width, height, best_time, stars FROM story_levels;";
+        dbcmd.CommandText = query;
+        var reader = dbcmd.ExecuteReader();
+
+        while (reader.Read())
+        {
+            var level = new LevelInfo();
+            level.id = reader.GetInt32(0);
+            level.levelName = reader.GetString(1);
+            level.seed = reader.GetString(2);
+            level.width = reader.GetInt32(3);
+            level.height = reader.GetInt32(4);
+            level.time = reader.GetFloat(5);
+            level.stars = (LevelInfo.StarsCount) reader.GetInt32(6);
+            
+            levels.Add(level);
+        }
+
+        return levels;
     }
 
 
