@@ -246,13 +246,18 @@ namespace Level
         {
             var time = timer.Stop();
 
-            if (time < GameManager.currentLevel.time)
+            if (GameManager.currentLevel.time < 0 || time < GameManager.currentLevel.time)
             {
                 GameManager.currentLevel.time = time;
                 GameManager.currentLevel.stars =
                     (LevelInfo.StarsCount) LevelInfo.StarsAchieved(time, GameManager.currentLevel.expectedTime);
             }
             //GameManager.currentLevel.time = time;
+
+            DatabaseHandler.UpdateStoryLevel(GameManager.currentLevel);
+
+            var temp = DatabaseHandler.GetStoryLevels();
+
 
             Debug.Log($"completed in {time} with expected time of {GameManager.currentLevel.expectedTime}");
 

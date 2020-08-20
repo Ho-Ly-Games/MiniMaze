@@ -2,7 +2,7 @@
 
 namespace Game
 {
-    public class LevelInfo
+    public class LevelInfo : IComparable<LevelInfo>
     {
         public enum StarsCount
         {
@@ -22,7 +22,7 @@ namespace Game
         public int endX = -1, endY = -1;
 
         public float expectedTime;
-        public float time = Single.PositiveInfinity;
+        public float time = -1f;
         public StarsCount stars;
 
         public static int StarsAchieved(float achievedTime, float expectedTime)
@@ -31,6 +31,13 @@ namespace Game
             if (achievedTime <= expectedTime * 1.6f) return 2;
             if (achievedTime <= expectedTime * 2.5f) return 1;
             return 0;
+        }
+
+        public int CompareTo(LevelInfo other)
+        {
+            if (ReferenceEquals(this, other)) return 0;
+            if (ReferenceEquals(null, other)) return 1;
+            return id.CompareTo(other.id);
         }
     }
 }

@@ -27,39 +27,12 @@ namespace Game
             if (GameManager.Settings == null) GameManager.Settings = new Settings();
 
             #region Controls
+            
+            var devices = GameManager.Settings.GetControlType();
+            Device chosenDevice = devices.Item1;
+            availableDevices = devices.Item2;
 
-            availableDevices = new List<Device>();
-            //query device control options
-            var devices = InputSystem.devices.ToList();
-
-            if (devices.Exists(d => d is Accelerometer))
-                availableDevices.Add(new Device
-                {
-                    name = "Accelerometer", binding = Settings.ControlType.Accelerometer,
-                });
-            if (devices.Exists(d => d is Gamepad))
-                availableDevices.Add(new Device
-                {
-                    name = "Gamepad", binding = Settings.ControlType.Gamepad
-                });
-            if (devices.Exists(d => d is Keyboard))
-                availableDevices.Add(new Device
-                {
-                    name = "Keyboard", binding = Settings.ControlType.Keyboard
-                });
-            if (devices.Exists(d => d is Touchscreen))
-                availableDevices.Add(new Device
-                {
-                    name = "OnScreen Joystick", binding = Settings.ControlType.OnScreenJoystick
-                });
-
-
-            var chosenDevice = availableDevices.Find(d => d.binding == GameManager.Settings.controlType);
-            if (chosenDevice.name == null)
-            {
-                chosenDevice = availableDevices.First();
-            }
-
+            
             index = availableDevices.FindIndex(c => c.name == chosenDevice.name);
             controlChooser.text = availableDevices[index].name;
 

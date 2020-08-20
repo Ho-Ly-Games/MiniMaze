@@ -18,24 +18,39 @@ namespace Game
         [SerializeField] public Sprite stars0, stars1, stars2, stars3;
 
         public static Settings Settings;
-        
+
         private void Awake()
         {
-            //todo get settings from db
-            
-            //todo get levels from db,
-            
-            //todo if the levels in db dont exist, get from csv
-            
-            //todo add to db
-
             if (gameManagerRef == null) gameManagerRef = this;
             DontDestroyOnLoad(this.gameObject);
-            StoryLevels = Levels();
         }
 
         private void Start()
         {
+            
+            Settings = DatabaseHandler.GetSettings();
+            if (Settings == null)
+            {
+                //if settings are null, then the app has never been run... 
+                //so create settings, initialize db, and save settings to db
+                Settings = new Settings();
+
+                Settings.controlType = Settings.GetControlType().Item1.binding;
+
+                DatabaseHandler.CreateSettings(Settings);
+            }
+
+            //todo get levels from db,
+            StoryLevels = DatabaseHandler.GetStoryLevels();
+
+            if (StoryLevels == null || StoryLevels.Count <= 0)
+            {
+                //there are no levels in the db
+                StoryLevels = Levels();
+                //put in db
+                DatabaseHandler.CreateStoryLevels(StoryLevels);
+            }
+
             //load main menu
             GoToMain();
         }
@@ -49,6 +64,7 @@ namespace Game
         {
             SceneManager.LoadScene("Settings");
         }
+
         public void PlayLevel(LevelInfo level)
         {
             currentLevel = level;
