@@ -18,35 +18,54 @@ namespace Game
 
         private void OnEnable()
         {
-            controls.Enable();
+            if (GameManager.Settings.ControlType == Settings.Control.Accelerometer)
+            {
+                InputSystem.EnableDevice(Accelerometer.current);
+            }
+            else if (GameManager.Settings.ControlType == Settings.Control.Gamepad ||
+                     GameManager.Settings.ControlType == Settings.Control.Keyboard)
 
-            controls.Ball.Enable();
+            {
+                controls.Enable();
+                controls.Ball.Enable();
+            }
+
 #if UNITY_ANDROID
-            InputSystem.EnableDevice(Accelerometer.current);
 #endif
         }
 
 
         private void FixedUpdate()
         {
-#if UNITY_ANDROID
-            var acceleration = Accelerometer.current.acceleration.ReadValue().normalized;
-            Direction?.Invoke(acceleration.x, acceleration.y);
-#else
-            var direction = controls.Ball.Movement.ReadValue<Vector2>();
-            //todo process inversion
-            Direction?.Invoke(direction.x, direction.y);
-#endif
+            if (GameManager.Settings.ControlType == Settings.Control.Accelerometer)
+            {
+                var acceleration = Accelerometer.current.acceleration.ReadValue().normalized;
+                Direction?.Invoke(acceleration.x, acceleration.y);
+            }
+            else if (GameManager.Settings.ControlType == Settings.Control.Gamepad ||
+                     GameManager.Settings.ControlType == Settings.Control.Keyboard)
+
+            {
+                var direction = controls.Ball.Movement.ReadValue<Vector2>();
+                //todo process inversion
+                Direction?.Invoke(direction.x, direction.y);
+            }
         }
 
 
         private void OnDisable()
         {
-#if UNITY_ANDROID
-            InputSystem.DisableDevice(Accelerometer.current);
-#endif
-            controls.Ball.Disable();
-            controls.Disable();
+            if (GameManager.Settings.ControlType == Settings.Control.Accelerometer)
+            {
+                InputSystem.DisableDevice(Accelerometer.current);
+            }
+            else if (GameManager.Settings.ControlType == Settings.Control.Gamepad ||
+                     GameManager.Settings.ControlType == Settings.Control.Keyboard)
+
+            {
+                controls.Ball.Disable();
+                controls.Disable();
+            }
         }
     }
 }

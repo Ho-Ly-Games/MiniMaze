@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Database;
 using Game;
 using MazeGen;
-using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
@@ -78,10 +78,9 @@ namespace Level
             MakeMaze(GameManager.currentLevel);
         }
 
-        [Button("Generate")]
         public void MakeMaze(LevelInfo level)
         {
-            generateLevel.GenerateMaze(level.width, level.height, level.seed.GetHashCode());
+            generateLevel.GenerateMaze(level.Width, level.Height, level.Seed.GetHashCode());
         }
 
         public GoalProp FindGoal(List<List<Node>> nodes)
@@ -211,7 +210,7 @@ namespace Level
         public void SetReady()
         {
             var startPos3D = new Vector3(GameManager.currentLevel.startX + 0.5f,
-                GameManager.currentLevel.height - GameManager.currentLevel.startY - 0.5f, 0);
+                GameManager.currentLevel.Height - GameManager.currentLevel.startY - 0.5f, 0);
 
             if (_localBall == null)
                 _localBall = Instantiate(Ball, startPos3D,
@@ -222,7 +221,7 @@ namespace Level
             cameraController.ball = _localBall;
 
             var goalPos3D = new Vector3(GameManager.currentLevel.endX + 0.5f,
-                GameManager.currentLevel.height - GameManager.currentLevel.endY - 0.5f, 0);
+                GameManager.currentLevel.Height - GameManager.currentLevel.endY - 0.5f, 0);
 
             if (_localGoal == null)
                 _localGoal = Instantiate(Goal, goalPos3D,
@@ -246,18 +245,15 @@ namespace Level
         {
             var time = timer.Stop();
 
-            if (GameManager.currentLevel.time < 0 || time < GameManager.currentLevel.time)
+            if (GameManager.currentLevel.Time < 0 || time < GameManager.currentLevel.Time)
             {
-                GameManager.currentLevel.time = time;
-                GameManager.currentLevel.stars =
+                GameManager.currentLevel.Time = time;
+                GameManager.currentLevel.Stars =
                     (LevelInfo.StarsCount) LevelInfo.StarsAchieved(time, GameManager.currentLevel.expectedTime);
             }
             //GameManager.currentLevel.time = time;
 
-            DatabaseHandler.UpdateStoryLevel(GameManager.currentLevel);
-
-            var temp = DatabaseHandler.GetStoryLevels();
-
+            DatabaseHandler.UpdateLevel(GameManager.currentLevel);
 
             Debug.Log($"completed in {time} with expected time of {GameManager.currentLevel.expectedTime}");
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Database;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,7 +9,7 @@ namespace Game
 {
     public class Settings
     {
-        public enum ControlType
+        public enum Control
         {
             Accelerometer,
             Keyboard,
@@ -16,10 +17,17 @@ namespace Game
             OnScreenJoystick
         }
 
-        public ControlType controlType;
+        [PrimaryKey] public int ID { get; set; } = 0;
+        public Control ControlType { get; set; }
 
         public int qualitySetting = -1;
 
+        public Settings()
+        {
+            ControlType = GetControlType().Item1.binding;
+        }
+        
+        
         public Tuple<SettingsManager.Device, List<SettingsManager.Device>> GetControlType()
         {
             var availableDevices = new List<SettingsManager.Device>();
@@ -29,26 +37,26 @@ namespace Game
             if (devices.Exists(d => d is Accelerometer))
                 availableDevices.Add(new SettingsManager.Device
                 {
-                    name = "Accelerometer", binding = Settings.ControlType.Accelerometer,
+                    name = "Accelerometer", binding = Settings.Control.Accelerometer,
                 });
             if (devices.Exists(d => d is Gamepad))
                 availableDevices.Add(new SettingsManager.Device
                 {
-                    name = "Gamepad", binding = Settings.ControlType.Gamepad
+                    name = "Gamepad", binding = Settings.Control.Gamepad
                 });
             if (devices.Exists(d => d is Keyboard))
                 availableDevices.Add(new SettingsManager.Device
                 {
-                    name = "Keyboard", binding = Settings.ControlType.Keyboard
+                    name = "Keyboard", binding = Settings.Control.Keyboard
                 });
             if (devices.Exists(d => d is Touchscreen))
                 availableDevices.Add(new SettingsManager.Device
                 {
-                    name = "OnScreen Joystick", binding = Settings.ControlType.OnScreenJoystick
+                    name = "OnScreen Joystick", binding = Settings.Control.OnScreenJoystick
                 });
 
 
-            var chosenDevice = availableDevices.Find(d => d.binding == GameManager.Settings.controlType);
+            var chosenDevice = availableDevices.Find(d => d.binding == GameManager.Settings?.ControlType);
             if (chosenDevice.name == null)
             {
                 chosenDevice = availableDevices.First();

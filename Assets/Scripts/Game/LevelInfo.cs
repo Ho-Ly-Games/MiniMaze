@@ -1,4 +1,5 @@
 ﻿using System;
+using Database;
 
 namespace Game
 {
@@ -12,18 +13,27 @@ namespace Game
             ThreeStar = 3,
         }
 
-        public int id;
+        public enum Type
+        {
+            Story,
+            Custom
+        }
 
-        public string levelName;
-        public string seed;
-        public int width, height;
+        [PrimaryKey] public int ID { get; set; }
+
+        public string LevelName { get; set; }
+        public string Seed { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
 
         public int startX = -1, startY = -1;
         public int endX = -1, endY = -1;
 
         public float expectedTime;
-        public float time = -1f;
-        public StarsCount stars;
+        public float Time { get; set; } = -1f;
+        public StarsCount Stars { get; set; }
+
+        public Type LevelType { get; set; }
 
         public static int StarsAchieved(float achievedTime, float expectedTime)
         {
@@ -37,7 +47,7 @@ namespace Game
         {
             if (ReferenceEquals(this, other)) return 0;
             if (ReferenceEquals(null, other)) return 1;
-            return id.CompareTo(other.id);
+            return ID.CompareTo(other.ID);
         }
     }
 }

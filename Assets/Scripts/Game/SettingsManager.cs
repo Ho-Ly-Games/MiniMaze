@@ -12,7 +12,7 @@ namespace Game
         public struct Device
         {
             public string name;
-            public Settings.ControlType binding;
+            public Settings.Control binding;
         }
 
         private List<Device> availableDevices;
@@ -66,7 +66,7 @@ namespace Game
 
             //todo update settings
             controlChooser.text = availableDevices[index].name;
-            GameManager.Settings.controlType = availableDevices[index].binding;
+            GameManager.Settings.ControlType = availableDevices[index].binding;
         }
 
 

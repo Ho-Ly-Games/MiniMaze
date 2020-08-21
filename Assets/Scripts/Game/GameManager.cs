@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Database;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 namespace Game
 {
@@ -29,28 +29,9 @@ namespace Game
         {
             
             Settings = DatabaseHandler.GetSettings();
-            if (Settings == null)
-            {
-                //if settings are null, then the app has never been run... 
-                //so create settings, initialize db, and save settings to db
-                Settings = new Settings();
-
-                Settings.controlType = Settings.GetControlType().Item1.binding;
-
-                DatabaseHandler.CreateSettings(Settings);
-            }
-
+            
             //todo get levels from db,
             StoryLevels = DatabaseHandler.GetStoryLevels();
-
-            if (StoryLevels == null || StoryLevels.Count <= 0)
-            {
-                //there are no levels in the db
-                StoryLevels = Levels();
-                //put in db
-                DatabaseHandler.CreateStoryLevels(StoryLevels);
-            }
-
             //load main menu
             GoToMain();
         }
@@ -97,28 +78,5 @@ namespace Game
 #endif
         }
 
-        private List<LevelInfo> Levels()
-        {
-            List<LevelInfo> Levels = new List<LevelInfo>();
-            var levels = Resources.Load<TextAsset>("Levels/Story");
-
-            var lines = levels.text.Split('\n');
-
-            foreach (var line in lines)
-            {
-                if (line == String.Empty) break;
-                var data = line.Split(',');
-                Levels.Add(new LevelInfo()
-                {
-                    id = Int32.Parse(data[0]),
-                    levelName = data[1],
-                    width = Int32.Parse(data[2]),
-                    height = Int32.Parse(data[3]),
-                    seed = data[4].Trim('\r'),
-                });
-            }
-
-            return Levels;
-        }
     }
 }

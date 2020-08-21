@@ -28,16 +28,16 @@ namespace Game
             //show these stats on the card
 
             //level name
-            levelName.text = levelInfo.levelName;
+            levelName.text = levelInfo.LevelName;
 
-            if (levelInfo.time > 0)
+            if (levelInfo.Time > 0)
             {
-                TimeSpan time = TimeSpan.FromSeconds(levelInfo.time);
+                TimeSpan time = TimeSpan.FromSeconds(levelInfo.Time);
                 bestTime.text = time.ToString("mm':'ss'.'f");
             }
             else bestTime.text = "Incomplete";
 
-            switch (levelInfo.stars)
+            switch (levelInfo.Stars)
             {
                 case LevelInfo.StarsCount.ZeroStar:
                     stars.sprite = GameManager.gameManagerRef.stars0;
@@ -55,8 +55,8 @@ namespace Game
                     throw new ArgumentOutOfRangeException();
             }
 
-            size.text = $"{levelInfo.width}x{levelInfo.height}";
-            seed.text = levelInfo.seed;
+            size.text = $"{levelInfo.Width}x{levelInfo.Height}";
+            seed.text = levelInfo.Seed;
         }
     }
 }

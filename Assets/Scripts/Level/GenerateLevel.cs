@@ -3,7 +3,6 @@ using System.Collections;
 using System.Threading.Tasks;
 using Game;
 using MazeGen;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Level
