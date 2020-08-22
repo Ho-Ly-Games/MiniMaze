@@ -4,6 +4,11 @@ using System.Linq;
 using Game;
 using UnityEngine;
 
+#if !UNITY_EDITOR
+using System.Collections;
+using System.IO;
+#endif
+
 namespace Database
 {
     public class DatabaseHandler : MonoBehaviour
@@ -30,7 +35,7 @@ namespace Database
 #if UNITY_EDITOR
             database.CreateDB();
 #else
-            if (!exists)
+            if (!exists){
                 database.CreateDB();
             }
 #endif
