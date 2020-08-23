@@ -60,16 +60,19 @@ namespace Level
 
         public void ToMainMenu()
         {
+            Pause(false);
             GameManager.gameManagerRef.GoToMain();
         }
 
         public void RestartLevel()
         {
+            Pause(false);
             GameManager.gameManagerRef.PlayLevel(GameManager.currentLevel);
         }
 
         public void NextLevel()
         {
+            Pause(false);
             GameManager.gameManagerRef.PlayNextLevel();
         }
 
@@ -255,11 +258,10 @@ namespace Level
 
             DatabaseHandler.UpdateLevel(GameManager.currentLevel);
 
-            Debug.Log($"completed in {time} with expected time of {GameManager.currentLevel.expectedTime}");
-
             _localBall.rgd.velocity = Vector2.zero;
             _localBall.rgd.constraints = RigidbodyConstraints2D.FreezeAll;
 
+            levelCompleteScreen.NextStarAt(LevelInfo.NextStarAt(time, GameManager.currentLevel.expectedTime));
             levelCompleteScreen.gameObject.SetActive(true);
         }
 

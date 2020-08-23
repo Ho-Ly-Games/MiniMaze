@@ -23,6 +23,7 @@ namespace Game
         {
             if (gameManagerRef == null) gameManagerRef = this;
             DontDestroyOnLoad(this.gameObject);
+            Screen.sleepTimeout = SleepTimeout.NeverSleep;
         }
 
         private void Start()
@@ -78,5 +79,9 @@ namespace Game
 #endif
         }
 
+        private void OnDestroy()
+        {
+            Screen.sleepTimeout = SleepTimeout.SystemSetting;
+        }
     }
 }

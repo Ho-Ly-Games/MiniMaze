@@ -19,6 +19,10 @@ namespace Game
             Custom
         }
 
+        private static readonly float threeStarMultiplier = 1f;
+        private static readonly float twoStarMultiplier = 1.6f;
+        private static readonly float oneStarMultiplier = 2.5f;
+        
         [PrimaryKey] public int ID { get; set; }
 
         public string LevelName { get; set; }
@@ -37,9 +41,9 @@ namespace Game
 
         public static int StarsAchieved(float achievedTime, float expectedTime)
         {
-            if (achievedTime <= expectedTime) return 3;
-            if (achievedTime <= expectedTime * 1.6f) return 2;
-            if (achievedTime <= expectedTime * 2.5f) return 1;
+            if (achievedTime <= expectedTime * threeStarMultiplier) return 3;
+            if (achievedTime <= expectedTime * twoStarMultiplier) return 2;
+            if (achievedTime <= expectedTime * oneStarMultiplier) return 1;
             return 0;
         }
 
@@ -48,6 +52,14 @@ namespace Game
             if (ReferenceEquals(this, other)) return 0;
             if (ReferenceEquals(null, other)) return 1;
             return ID.CompareTo(other.ID);
+        }
+
+        public static float NextStarAt(float time, float currentLevelExpectedTime)
+        {
+            if (time <= currentLevelExpectedTime * threeStarMultiplier) return 0;
+            if (time <= currentLevelExpectedTime * twoStarMultiplier) return currentLevelExpectedTime * threeStarMultiplier - time;
+            if (time <= currentLevelExpectedTime * oneStarMultiplier) return currentLevelExpectedTime * twoStarMultiplier - time;
+            return currentLevelExpectedTime * oneStarMultiplier - time;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Database;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -69,6 +70,10 @@ namespace Game
             GameManager.Settings.ControlType = availableDevices[index].binding;
         }
 
+        public void ResetDatabase()
+        {
+            DatabaseHandler.ResetDB();
+        }
 
         public void ChangeQualitySelection(int direction)
         {

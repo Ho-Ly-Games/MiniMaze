@@ -86,5 +86,11 @@ namespace Database
         {
             database.UpdateLevel(currentLevel);
         }
+
+        public static void ResetDB()
+        {
+            database.CreateDB();
+            GameManager.StoryLevels = database.GetLevels(LevelInfo.Type.Story).ToList();
+        }
     }
 }
