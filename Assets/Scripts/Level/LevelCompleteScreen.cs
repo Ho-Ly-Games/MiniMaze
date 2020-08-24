@@ -2,24 +2,30 @@
 using Game;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Level
 {
     public class LevelCompleteScreen : MonoBehaviour
     {
+        [SerializeField] private Button restartButton;
+
+        [SerializeField] private EventSystem eventSystem;
+
         [SerializeField] private Image starsImage;
 
         [SerializeField] private Animator anim;
 
         [SerializeField] private TextMeshProUGUI time;
         [SerializeField] private TextMeshProUGUI nextStarAtText;
-        
+
         [SerializeField] private Timer timer;
         [SerializeField] private MazeManager mazeManager;
 
         private void OnEnable()
         {
+            eventSystem.SetSelectedGameObject(restartButton.gameObject);
             mazeManager.DisablePause();
             time.text = TimeSpan.FromSeconds(timer.Time).ToString("mm':'ss'.'f");
             anim.SetInteger("stars", LevelInfo.StarsAchieved(timer.Time, GameManager.currentLevel.expectedTime));
