@@ -27,6 +27,7 @@ namespace Level
         {
             eventSystem.SetSelectedGameObject(restartButton.gameObject);
             mazeManager.DisablePause();
+            mazeManager.EnableStick(false);
             time.text = TimeSpan.FromSeconds(timer.Time).ToString("mm':'ss'.'f");
             anim.SetInteger("stars", LevelInfo.StarsAchieved(timer.Time, GameManager.currentLevel.expectedTime));
         }

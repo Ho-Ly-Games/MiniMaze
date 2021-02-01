@@ -2,6 +2,7 @@
 using Input;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.OnScreen;
 
 namespace Game
 {
@@ -10,6 +11,8 @@ namespace Game
         public static Action<float, float> Direction;
 
         private Controls controls;
+
+        [SerializeField] private OnScreenStick stick;
 
         private void Awake()
         {
@@ -29,9 +32,12 @@ namespace Game
                 controls.Enable();
                 controls.Ball.Enable();
             }
-
-#if UNITY_ANDROID
-#endif
+            else if (GameManager.Settings.ControlType == Settings.Control.OnScreenJoystick)
+            {
+                controls.Enable();
+                controls.Ball.Enable();
+                stick.gameObject.SetActive(true);
+            }
         }
 
 
@@ -65,6 +71,12 @@ namespace Game
             {
                 controls.Ball.Disable();
                 controls.Disable();
+            }
+            else if (GameManager.Settings.ControlType == Settings.Control.OnScreenJoystick)
+            {
+                controls.Disable();
+                controls.Ball.Disable();
+                stick.gameObject.SetActive(false);
             }
         }
     }

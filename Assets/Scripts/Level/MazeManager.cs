@@ -4,6 +4,7 @@ using Database;
 using Game;
 using MazeGen;
 using UnityEngine;
+using UnityEngine.InputSystem.OnScreen;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
 
@@ -39,6 +40,8 @@ namespace Level
         [SerializeField] private GameObject pauseButton;
         [SerializeField] private GameObject pauseMenu;
         [SerializeField] private LevelCompleteScreen levelCompleteScreen;
+
+        [SerializeField] private OnScreenStick stick;
 
         public void CreateMaze(List<List<Node>> nodes)
         {
@@ -268,6 +271,11 @@ namespace Level
         public void DisablePause()
         {
             pauseButton.SetActive(false);
+        }
+
+        public void EnableStick(bool enable)
+        {
+            stick.gameObject.SetActive(enable);
         }
     }
 }
