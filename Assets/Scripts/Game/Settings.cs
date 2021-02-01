@@ -49,13 +49,12 @@ namespace Game
                 {
                     name = "Keyboard", binding = Settings.Control.Keyboard
                 });
-#if false
+
             if (devices.Exists(d => d is Touchscreen))
                 availableDevices.Add(new SettingsManager.Device
                 {
                     name = "OnScreen Joystick", binding = Settings.Control.OnScreenJoystick
                 });
-#endif
 
 
             var chosenDevice = availableDevices.Find(d => d.binding == GameManager.Settings?.ControlType);

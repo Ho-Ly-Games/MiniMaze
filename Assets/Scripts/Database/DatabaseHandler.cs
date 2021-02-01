@@ -52,6 +52,11 @@ namespace Database
             return database.GetSettings();
         }
 
+        public static void UpdateSettings(Settings settings)
+        {
+            database.PutSettings(settings);
+        }
+
         public static List<LevelInfo> GetStoryLevels()
         {
             var levels = database.GetLevels(LevelInfo.Type.Story).ToList();

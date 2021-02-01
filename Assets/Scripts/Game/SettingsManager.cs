@@ -73,6 +73,11 @@ namespace Game
         public void ResetDatabase()
         {
             DatabaseHandler.ResetDB();
+            
+            
+            
+            //todo get levels from db,
+            GameManager.StoryLevels = DatabaseHandler.GetStoryLevels();
         }
 
         public void ChangeQualitySelection(int direction)

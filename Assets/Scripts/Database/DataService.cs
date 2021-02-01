@@ -92,7 +92,7 @@ namespace Database
 
         public IEnumerable<LevelInfo> GetLevels(LevelInfo.Type levelType)
         {
-            return _connection.Table<LevelInfo>().Where(l => l.LevelType == levelType);
+            return _connection.Table<LevelInfo>().Where(l => l.LevelType == levelType).OrderBy(l => l.ID);
         }
 
         public Settings GetSettings()
@@ -113,6 +113,11 @@ namespace Database
         public void Close()
         {
             _connection.Dispose();
+        }
+
+        public void PutSettings(Settings settings)
+        {
+            _connection.InsertOrReplace(settings);
         }
     }
 }
