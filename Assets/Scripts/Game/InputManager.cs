@@ -49,7 +49,8 @@ namespace Game
                 Direction?.Invoke(acceleration.x, acceleration.y);
             }
             else if (GameManager.Settings.ControlType == Settings.Control.Gamepad ||
-                     GameManager.Settings.ControlType == Settings.Control.Keyboard)
+                     GameManager.Settings.ControlType == Settings.Control.Keyboard ||
+                     GameManager.Settings.ControlType == Settings.Control.OnScreenJoystick)
 
             {
                 var direction = controls.Ball.Movement.ReadValue<Vector2>();
